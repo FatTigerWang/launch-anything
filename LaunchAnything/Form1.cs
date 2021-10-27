@@ -67,6 +67,7 @@ namespace LaunchAnything
                     var readData = Convert.ToUInt16(data & 0x000F);
                     if ((readData & 0x02) > 0)
                     {
+                        // 高电平
                         this.button2.Invoke(() =>
                         {
                             this.button2.BackColor = System.Drawing.Color.Green;
@@ -82,6 +83,7 @@ namespace LaunchAnything
 
                     if ((readData & 0x01) > 0)
                     {
+                        // 高电平
                         this.button1.Invoke(() =>
                         {
                             this.button1.BackColor = System.Drawing.Color.Green;
@@ -96,7 +98,7 @@ namespace LaunchAnything
                     }
                     Thread.Sleep(100);
                 }
-                MessageBox.Show("读io失败");
+                MessageBox.Show("读I/O失败");
             });
 
         }
@@ -133,11 +135,6 @@ namespace LaunchAnything
             {
                 MessageBox.Show("未检测到设备", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
