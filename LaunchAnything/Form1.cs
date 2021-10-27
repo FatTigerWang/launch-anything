@@ -12,6 +12,7 @@ namespace LaunchAnything
         IntPtr m_hHID = new IntPtr(-1);//设备句柄
         UInt16 m_wIODir = 0;//用来改变IO口输入输出状态的参数
         UInt16 m_wIOData = 0;//用来改变IO口拉高拉低的参数
+        bool lower = false;
         public const uint GENERIC_READ = 0x80000000;//winapi函数CreateFile相关参数
         public const uint GENERIC_WRITE = 0x40000000;
         public const uint FILE_SHARE_READ = 0x00000001;
@@ -26,7 +27,9 @@ namespace LaunchAnything
         public const int ERROR_NO_MORE_ITEMS = 259;
         public const uint DEVICE_ARRIVAL = 3;	// 设备插入事件,已经插入
         public const uint DEVICE_REMOVE_PEND = 1;	// 设备将要拔出
-        public const uint DEVICE_REMOVE = 0;	// 设备拔出事件,已经拔出
+        public const uint DEVICE_REMOVE = 0;    // 设备拔出事件,已经拔出
+
+
 
         public Form1()
         {
@@ -55,7 +58,7 @@ namespace LaunchAnything
             // 写 I/O
             if (CH9326DLL.CH9326WriteIOData(m_hHID, Convert.ToUInt16(m_wIOData & m_wIODir)) == 0)
             {
-                MessageBox.Show("写io失败");
+                MessageBox.Show("写I/O失败");
                 return;
             }
 
@@ -68,33 +71,25 @@ namespace LaunchAnything
                     if ((readData & 0x02) > 0)
                     {
                         // 高电平
-                        this.button2.Invoke(() =>
+                        if (!lower)
                         {
-                            this.button2.BackColor = System.Drawing.Color.Green;
-                        });
+                            lower = true;
+                            this.button2.Invoke(() =>
+                            {
+                                this.button2.BackColor = System.Drawing.Color.Green;
+                            });
+                        }
                     }
                     else
                     {
-                        this.button2.Invoke(() =>
+                        if (lower)
                         {
-                            this.button2.BackColor = System.Drawing.Color.Red;
-                        });
-                    }
-
-                    if ((readData & 0x01) > 0)
-                    {
-                        // 高电平
-                        this.button1.Invoke(() =>
-                        {
-                            this.button1.BackColor = System.Drawing.Color.Green;
-                        });
-                    }
-                    else
-                    {
-                        this.button1.Invoke(() =>
-                        {
-                            this.button1.BackColor = System.Drawing.Color.Red;
-                        });
+                            lower = false;
+                            this.button2.Invoke(() =>
+                            {
+                                this.button2.BackColor = System.Drawing.Color.Red;
+                            });
+                        }
                     }
                     Thread.Sleep(100);
                 }
