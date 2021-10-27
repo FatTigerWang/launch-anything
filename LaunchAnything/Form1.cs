@@ -73,9 +73,11 @@ namespace LaunchAnything
                         // 高电平
                         if (!lower)
                         {
+                            
                             lower = true;
                             this.button2.Invoke(() =>
                             {
+                                SendKeys.Send(" ");
                                 this.button2.BackColor = System.Drawing.Color.Green;
                             });
                         }
@@ -91,7 +93,7 @@ namespace LaunchAnything
                             });
                         }
                     }
-                    Thread.Sleep(100);
+                    Thread.Sleep(10);
                 }
                 MessageBox.Show("读I/O失败");
             });
